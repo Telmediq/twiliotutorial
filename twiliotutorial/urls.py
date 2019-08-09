@@ -18,5 +18,6 @@ from django.urls import path
 import twiliotutorial.views as app_views
 
 urlpatterns = [
-    path('callback', app_views.InteractiveVoiceResponseView.as_view()),
+    path('callback', app_views.InteractiveVoiceResponseView.as_view(), name='twilio-callback'),
+    path('play-again', app_views.PlayAgain.as_view(), name='play-again'),
 ]
