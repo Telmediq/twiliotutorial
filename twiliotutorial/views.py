@@ -78,7 +78,7 @@ class BeerFact(View):
         beer = Beer()
         mug = beer.get_beer_fact()
         name = mug['name']
-        logging.debug("Beer info: %s".format(beer))
+        logging.debug("Beer info: %s",beer)
         response.say("Hello! I am going to drop a dank beer on you.", voice=settings.VOICE)
         gather = voice_response.Gather(
             action="/beertext?beerid=" + mug['id'],
@@ -124,7 +124,7 @@ class BeerText(View):
             beer_name = mug['name']
             if 'abv' not in mug.keys():
                 mug['abv'] = "Unknown "
-            if 'abv' not in mug.keys():
+            if 'ibu' not in mug.keys():
                 mug['ibu'] = "Unknown"
 
             message = client.messages.create(
@@ -133,7 +133,7 @@ class BeerText(View):
                 to=request_from_number
             )
 
-            logging.info("Sent sms: %s".format(message.sid))
+            logging.info("Sent sms: %s", message.sid)
 
         response = voice_response.VoiceResponse()
         response = HttpResponse(response.to_xml())

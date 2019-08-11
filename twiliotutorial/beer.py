@@ -21,15 +21,15 @@ class Beer:
         response = requests.get(url=url, params=params)
         response.close()
         if response.status_code != 200:
-            logging.debug(f"Response code: {response.status_code}")
+            logging.debug("Response code: %s", response.status_code)
 
         response_dict = json.loads(response.content)
 
-        logging.debug(f"Beer response: {response_dict}")
+        logging.debug("Beer response: %s", response.status_code)
         return response_dict['data']
 
     def get_beer_by_id(self, beerid):
-        logging.debug("Looking for beer id: %s".format(beerid))
+        logging.debug("Looking for beer id: %s", beerid)
         params = {
             'key': settings.BEER_API_KEY,
             'ids': beerid
@@ -39,10 +39,10 @@ class Beer:
         response = requests.get(url=url, params=params)
         response.close()
         if response.status_code != 200:
-            logging.debug("Response code: %s".format(response.status_code))
+            logging.debug("Response code: %s", response.status_code)
 
         response_dict = json.loads(response.content)
 
-        logging.debug("Beer response: %s".format(response_dict))
+        logging.debug("Beer response: %s",response_dict)
         return response_dict['data']
 
