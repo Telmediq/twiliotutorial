@@ -1,10 +1,19 @@
 from django.http import HttpResponse
 from django.views import View
+from django.conf import settings
+
 
 from twilio.twiml import voice_response
 
+from twiliotutorial.beer import Beer
+
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 class InteractiveVoiceResponseView(View):
+
 
     def post(self, request, *args, **kwargs):
 
@@ -55,3 +64,28 @@ class PlayAgain(View):
             response.hangup()
 
         return response
+
+
+class BeerFact(View):
+
+    def post(self, request):
+        response = voice_response.VoiceResponse()
+        response.say("Hello! I am going to drop a dank beer on you.", voice=settings.VOICE)
+
+        beer = Beer()
+        mug = beer.get_beer_fact()
+        name = mug['name']
+        logging.debug(f"Beer info: {name}")
+        response.say(f"Our beer today is {name}", voice=settings.VOICE)
+
+        if 'abv' in mug.keys():
+            abv = mug['abv']
+            response.say(f"Coming in at {abv} percent.", voice=settings.VOICE)
+
+        if 'description' in mug['style'].keys():
+            description = mug['style']['description']
+            response.say(f"{description}", voice=settings.VOICE)
+
+        response.hangup()
+
+        return HttpResponse(response.to_xml())

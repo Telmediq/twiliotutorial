@@ -66,3 +66,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 APPEND_SLASH = False
+
+BEER_API_URL = os.environ.get('BEER_API_URL')
+BEER_API_KEY = os.environ.get('BEER_API_KEY')
+
+VOICE = os.environ.get('VOICE', "alice")
