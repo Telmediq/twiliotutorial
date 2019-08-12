@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  twiliotutorial:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    volumes:
+      - ${PWD}:/opt/app/twiliotutorial
