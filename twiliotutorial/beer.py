@@ -19,7 +19,7 @@ BeerFact = namedtuple('Beerfact', 'id name abv ibu style')
 
 class Beer:
     @staticmethod
-    def get_beer_url() -> str:
+    def get_random_beer_url() -> str:
         return urllib.parse.urljoin(settings.BEER_API_URL, RANDOM_BEER_URI)
 
     @staticmethod
@@ -29,7 +29,7 @@ class Beer:
     @staticmethod
     def get_beer_fact_from_api(url: str, params: Optional[Dict[str, str]]) -> Dict[str, str]:
         response = requests.get(url=url, params=params)
-        response.close()
+
         result = dict()
         if response.status_code != 200:
             logging.debug("Response code: %s", response.status_code)
@@ -59,20 +59,20 @@ class Beer:
         params = {
             'key': settings.BEER_API_KEY
         }
-        url = self.get_beer_url()
-        result = self.get_beer_fact_from_api(url, params)
+        url = self.get_random_beer_url()
+        result = self.get_beer_fact_from_api(url=url, params=params)
 
         return self.convert_result_to_beer_fact(result)
 
     # Get a specific beer from the API by ID. Returns some data.
-    def get_beer_by_id(self, beerid) -> BeerFact:
-        logging.debug("Looking for beer id: %s", beerid)
+    def get_beer_by_id(self, beer_id: str) -> BeerFact:
+        logging.debug("Looking for beer id: %s", beer_id)
         params = {
             'key': settings.BEER_API_KEY,
-            'ids': beerid
+            'ids': beer_id
         }
 
         url = self.get_beer_with_id_url()
-        result = self.get_beer_fact_from_api(url, params)
+        result = self.get_beer_fact_from_api(url=url, params=params)
         # Getting a beer by ID returns a paginated list. Let's grab the first item only
         return self.convert_result_to_beer_fact(result)

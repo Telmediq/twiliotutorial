@@ -1,5 +1,4 @@
 import logging
-from urllib.parse import parse_qs
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -103,31 +102,34 @@ class BeerFactView(View):
 
 
 class BeerTextView(View):
+    def create_text_body(self, beer_fact):
+        body = f"Hi there! You were listening to: {getattr(beer_fact, 'name')}, " \
+               f"{getattr(beer_fact, 'abv', 'Unknown')}%, IBU: {getattr(beer_fact, 'ibu', 'Unknown')}"
+        return body
 
-    def text_beer_info_to_number(self, beer_fact: BeerFact, request_from_number: str,
-                                 request_to_number: str) -> None:
+    def text_beer_info_to_number(self, beer_fact: BeerFact, from_: str,
+                                 to_: str) -> None:
+
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_ACCOUNT_TOKEN)
-        if not beer_fact.abv:
-            beer_fact.abv = "Unknown "
-        if not beer_fact.ibu:
-            beer_fact.ibu = "Unknown"
+
+        text_body = self.create_text_body(beer_fact)
 
         message = client.messages.create(
-            body=f"Hi there! You were listening to: {beer_fact.name}, {beer_fact.abv}%, IBU: {beer_fact.ibu}",
-            from_=request_to_number,
-            to=request_from_number
+            body=text_body,
+            from_=to_,
+            to=from_
         )
         logging.info("Sent sms: %s", message.sid)
 
     def get_beer_fact_for_beer_id(self, beer_id: str) -> BeerFact:
         beer = Beer()
-        fact = beer.get_beer_by_id(beerid=beer_id)
+        fact = beer.get_beer_by_id(beer_id=beer_id)
         logging.debug("Beer info: %s", beer)
         return fact
 
     def post(self, request):
         logging.info("OOhhh...Engagement.")
-        request_beerid = parse_qs(request.META['QUERY_STRING'])['beerid'][0]
+        request_beerid = request.GET.get('beerid')  # Even though this is a post, django puts query params in the GET.
         request_from_number = request.POST.get("From", None)
         request_to_number = request.POST.get("To", None)
 
@@ -137,7 +139,8 @@ class BeerTextView(View):
             logging.info("Weird, we didn't get a number")
         else:
             beer_fact = self.get_beer_fact_for_beer_id(beer_id=request_beerid)
-            self.text_beer_info_to_number(beer_fact, request_from_number, request_to_number)
+            self.text_beer_info_to_number(beer_fact=beer_fact, from_=request_from_number,
+                                          to_=request_to_number)
 
         response = voice_response.VoiceResponse()
         response = HttpResponse(response.to_xml(), content_type='text/xml')
