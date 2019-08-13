@@ -45,4 +45,4 @@ class Beer:
 
         logging.debug("Beer response: %s",response_dict)
         return response_dict['data']
-
+      

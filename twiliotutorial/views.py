@@ -79,6 +79,7 @@ class BeerFact(View):
         mug = beer.get_beer_fact()
         name = mug['name']
         logging.debug("Beer info: %s",beer)
+        
         response.say("Hello! I am going to drop a dank beer on you.", voice=settings.VOICE)
         gather = voice_response.Gather(
             action="/beertext?beerid=" + mug['id'],
@@ -99,7 +100,6 @@ class BeerFact(View):
         response.append(gather)
         response.say("Wow! You made it to the end. Be excellent to each other.", voice=settings.VOICE)
         response.hangup()
-
         response = HttpResponse(response.to_xml())
         return response
 
