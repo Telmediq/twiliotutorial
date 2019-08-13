@@ -78,7 +78,7 @@ class BeerFact(View):
         beer = Beer()
         mug = beer.get_beer_fact()
         name = mug['name']
-        logging.debug("Beer info: %s",beer)
+        logging.debug("Beer info: %s", mug)
         response.say("Hello! I am going to drop a dank beer on you.", voice=settings.VOICE)
         gather = voice_response.Gather(
             action="/beertext?beerid=" + mug['id'],
@@ -88,14 +88,8 @@ class BeerFact(View):
             finishOnKey='')
         gather.say(f"Our beer today is {name}", voice=settings.VOICE)
 
-        if 'abv' in mug.keys():
-            abv = mug['abv']
-            gather.say(f"Coming in at {abv} percent.", voice=settings.VOICE)
+        gather.say(beer.say_beer(mug))
 
-        if 'style' in mug.keys():
-            if 'description' in mug['style'].keys():
-                description = mug['style']['description']
-                gather.say(f"{description}", voice=settings.VOICE)
         response.append(gather)
         response.say("Wow! You made it to the end. Be excellent to each other.", voice=settings.VOICE)
         response.hangup()
@@ -122,11 +116,8 @@ class BeerText(View):
             beer = Beer()
             mug = beer.get_beer_by_id(beerid=request_beerid)[0]
             beer_name = mug['name']
-            if 'abv' not in mug.keys():
-                mug['abv'] = "Unknown "
-            if 'ibu' not in mug.keys():
-                mug['ibu'] = "Unknown"
-
+            mug = beer.text_beer(mug)
+            
             message = client.messages.create(
                 body=f"Hi there! You were listening to: {beer_name}, {mug['abv']}%, IBU: {mug['ibu']}",
                 from_=request_to_number,
