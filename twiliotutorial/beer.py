@@ -45,28 +45,4 @@ class Beer:
 
         logging.debug("Beer response: %s",response_dict)
         return response_dict['data']
-
-    def say_beer(self, mug):
-        response_text = ""
-        if 'abv' in mug.keys():
-            abv = mug['abv']
-            logging.debug("Found abv.")
-            response_text += f"Coming in at {abv} percent."
-
-        if 'style' in mug.keys():
-            if 'description' in mug['style'].keys():
-                logging.debug("Found style.")
-                description = mug['style']['description']
-                response_text += f"{description}"
-
-        return response_text
-
-    def text_beer(self, mug):
-
-        if 'abv' not in mug.keys():
-            mug['abv'] = "Unknown "
-        if 'ibu' not in mug.keys():
-            mug['ibu'] = "Unknown"
-
-        return mug
-
+      
