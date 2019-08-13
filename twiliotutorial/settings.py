@@ -66,3 +66,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 APPEND_SLASH = False
+
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_ACCOUNT_TOKEN = os.environ.get('TWILIO_ACCOUNT_TOKEN')
+
+BEER_API_URL = os.environ.get('BEER_API_URL')
+BEER_API_KEY = os.environ.get('BEER_API_KEY')
+
+VOICE = os.environ.get('VOICE', "alice")
