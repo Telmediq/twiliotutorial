@@ -50,10 +50,12 @@ class Beer:
         response_text = ""
         if 'abv' in mug.keys():
             abv = mug['abv']
+            logging.debug("Found abv.")
             response_text += f"Coming in at {abv} percent."
 
         if 'style' in mug.keys():
             if 'description' in mug['style'].keys():
+                logging.debug("Found style.")
                 description = mug['style']['description']
                 response_text += f"{description}"
 

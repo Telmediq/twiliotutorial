@@ -88,7 +88,7 @@ class BeerFact(View):
             finishOnKey='')
         gather.say(f"Our beer today is {name}", voice=settings.VOICE)
 
-        gather.say(beer.say_beer(mug))
+        gather.say(beer.say_beer(mug), voice=settings.VOICE)
 
         response.append(gather)
         response.say("Wow! You made it to the end. Be excellent to each other.", voice=settings.VOICE)
@@ -117,7 +117,7 @@ class BeerText(View):
             mug = beer.get_beer_by_id(beerid=request_beerid)[0]
             beer_name = mug['name']
             mug = beer.text_beer(mug)
-            
+
             message = client.messages.create(
                 body=f"Hi there! You were listening to: {beer_name}, {mug['abv']}%, IBU: {mug['ibu']}",
                 from_=request_to_number,
