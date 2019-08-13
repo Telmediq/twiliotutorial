@@ -20,7 +20,7 @@ import twiliotutorial.views as app_views
 urlpatterns = [
     path('callback', app_views.InteractiveVoiceResponseView.as_view(), name='twilio-callback'),
     path('play-again', app_views.PlayAgain.as_view(), name='play-again'),
-    path('beerfact', app_views.BeerFact.as_view(), name='beerfact'),
-    path('beertext', app_views.BeerText.as_view(), name='beertext'),
+    path('beerfact', app_views.BeerFactView.as_view(), name='beerfact'),
+    path('beertext', app_views.BeerTextView.as_view(), name='beertext'),
 
 ]
